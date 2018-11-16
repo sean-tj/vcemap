@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>VCE MAP</title>
+    <style type="text/css">
+        html {
+            height: 100%
+        }
+
+        body {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #container {
+            height: calc(100% - 65px);
+            height: -webkit-calc(100% - 65px);
+            height: -moz-calc(100% - 65px);
+            height: 100%;
+            display: block;
+        }
+
+        #detailInfo {
+            width: 100%;
+            font-size: 14px;
+            z-index: 101;
+            position: absolute;
+            bottom: 0px;
+        }
+
+        table.imagetable {
+            font-family: verdana,arial,sans-serif;
+            font-size: 11px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #999999;
+            border-collapse: collapse;
+        }
+
+            table.imagetable td {
+                background: #dcddc0;
+                border-width: 1px;
+                padding: 8px;
+                border-style: solid;
+                border-color: #999999;
+            }
+
+                table.imagetable td:nth-child(2n+1) {
+                    background: #b5cfd2;
+                    border-width: 1px;
+                    padding: 8px;
+                    border-style: solid;
+                    border-color: #999999;
+                }
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=5oeAsTrhpH9cChGHYIHwgiQo5Qcm6WCH"></script>
+    <script language="javascript" type="text/javascript" src="js/workshops.js"></script>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="detailInfo">
+        <table class="imagetable" style="width:100%">
+            <tr>
+                <td style="width:150px">Plate Number</td>
+                <td>A00002</td>
+                <td style="width:100px">Driver</td>
+                <td>James</td>
+                <td style="width:100px">Phone</td>
+                <td>123456</td>
+            </tr>
+            <tr>
+                <td>Model</td>
+                <td>EC55B</td>
+                <td>SN</td>
+                <td colspan="3">56247</td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        //3 invoking URL examples :http://localhost/vce/vcemap.html?X=112.457474&Y=28.063&Name=%E6%95%85%E9%9A%9C%E8%BD%A6%E8%BE%86%E4%BD%8D%E7%BD%AE&Scope=60&Routepolicy=distance
+        //or http://localhost/vce/vcemap.html?X=121.451452&Y=31.094905&Name=%E6%95%85%E9%9A%9C%E8%BD%A6%E8%BE%86%E4%BD%8D%E7%BD%AE&Scope=60&Routepolicy=distance
+        //or http://localhost/vce/vcemap.html?X=105.532041&Y=28.968948&Name=%E6%95%85%E9%9A%9C%E8%BD%A6%E8%BE%86%E4%BD%8D%E7%BD%AE&Scope=60&Routepolicy=distance
+
+        var iniPointX = 104.596079, iniPointY = 33.496746, initname = "Breakdown Vehicle Location", initScope = 50, routepolicy = "duration";
+        if (GetQueryString("X") != null)
+            iniPointX = GetQueryString("X");
+        if (GetQueryString("Y") != null)
+            iniPointY = GetQueryString("Y");
+        if (GetQueryString("Name") != null)
+            initname = decodeURI(GetQueryString("Name"));
+        if (GetQueryString("Scope") != null)
+            initScope = GetQueryString("Scope");
+        if (GetQueryString("Routepolicy") != null)
+            routepolicy = GetQueryString("Routepolicy")
+
+        //初始化地图和初始坐标
+        var map = new BMap.Map("container");
+        var top_left_control = new BMap.ScaleControl({ anchor: BMAP_ANCHOR_TOP_LEFT });// 左上角，添加比例尺
+        var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+        var top_right_navigation = new BMap.NavigationControl({ anchor: BMAP_ANCHOR_TOP_RIGHT, type: BMAP_NAVIGATION_CONTROL_SMALL }); //右上角
+        //map.addControl(top_left_control);
+        map.addControl(top_left_navigation);
+        //map.addControl(top_right_navigation);
+        map.enableScrollWheelZoom(true);
+        var inipoint = new BMap.Point(iniPointX, iniPointY);
+
+        //获取所有workshop数据
+        var workshopsAddress = getAllWorkshops();
+        //显示所有的workshopStationmarker
+        var myGeo = new BMap.Geocoder();
+        var recommentPoint = null, miniTime = 0, miniDistance = 0;
+        var plan; var loopcount1 = 0, loopcount2 = 0, finish = '', workshopText = "";
+
+        var searchComplete = function (results) {
+            if (transit.getStatus() != BMAP_STATUS_SUCCESS) {
+                return;
+            }
+            if (finish == "True")
+                map.centerAndZoom(recommentPoint, 10);
+            if (results != null) {
+                plan = results.getPlan(0);
+                var duration = plan.getDuration(true);
+                var distance = plan.getDistance(true);
+                addWorkShopMarker(transit.ja.cv.point, workshopText + "<tr><td>Route Plan </td><td colspan='3'>驾车路程" + duration + "," + distance + "" + '</td></table>');
+                if (routepolicy == "duration") {
+                    if (miniTime == 0) { miniTime = duration; recommentPoint = transit.ja.cv.point; }
+                    else {
+                        if (miniTime > duration) {
+                            miniTime = duration;
+                            recommentPoint = transit.ja.cv.point;
+                        }
+                    }
+                }
+                if (routepolicy == "distance") {
+                    if (miniDistance == 0) { miniDistance = distance; recommentPoint = transit.ja.cv.point; }
+                    else {
+                        if (miniDistance > distance) {
+                            miniDistance = distance;
+                            recommentPoint = transit.ja.cv.point;
+                        }
+                    }
+                }
+                loopcount1 = loopcount1 + 1;
+                if (loopcount1 == loopcount2 && loopcount1 != 0 && loopcount2 != 0) {
+                    transit.search(inipoint, recommentPoint); finish = "True";
+                }
+                if (loopcount1 > loopcount2) {
+                    var sContent = workshopText + "<tr><td>Route Plan </td><td colspan='3'>驾车路程" + duration + "," + distance + "" + '</td></table>';
+                    var infoWindow = new BMap.InfoWindow(sContent);  // 创建信息窗口对象
+                    map.openInfoWindow(infoWindow, recommentPoint); //开启信息窗口
+                }
+            }
+        }
+        var transit = new BMap.DrivingRoute(map, {
+            panel: "r-result",
+            renderOptions: { map: map },
+            onSearchComplete: searchComplete,
+        });
+
+        for (let p in workshopsAddress) {
+            if (workshopsAddress[p].address != '')
+                myGeo.getPoint(workshopsAddress[p].address, function (point) {
+                    if (point) {
+                        var mile = GetDistance(inipoint.lat, inipoint.lng, point.lat, point.lng);
+                        if (mile <= initScope * 1000) {
+                            loopcount2 = loopcount2 + 1;
+                            transit.search(inipoint, point);
+
+                            workshopText = '<table class="imagetable" style="height:170px;width:310px">';
+                            workshopText += '<tr>';
+                            workshopText += '<td>Station</td><td>' + workshopsAddress[p].name + '</td><td>Leader</td><td>' + workshopsAddress[p].Mg + '</td>';
+                            workshopText += '</tr>';
+                            workshopText += '<tr>';
+                            workshopText += '<td>Phone</td><td colspan="3">' + workshopsAddress[p].phone + '</td>';
+                            workshopText += '</tr>';
+                            workshopText += '<tr>';
+                            workshopText += '<td>Address</td><td colspan="3">' + workshopsAddress[p].address + '</td>';
+                            workshopText += '</tr>';
+                            //workshopText += '</table>';
+                        }
+                    }
+                });
+        }
+
+        //添加初始化坐标点
+        addIniPointMark(iniPointX, iniPointY, initname);
+
+        //var oval = new BMap.Polygon(add_oval(point,6,7), {strokeColor:"blue", strokeWeight:6, strokeOpacity:0.5});
+
+        //var pointCenter = map.getCenter();
+        var circle = new BMap.Circle(inipoint, initScope * 1000, {
+            strokeColor: "blue",
+            strokeWeight: 1,
+            fillColor: "#E2E8F1",
+            fillOpacity: 0.3
+        });
+        map.addOverlay(circle);
+        map.centerAndZoom(inipoint, 10);
+    </script>
+</body>
+</html>

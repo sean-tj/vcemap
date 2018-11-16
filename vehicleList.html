@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Vehicle List</title>
+    <!-- for-mobile-apps -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- //for-mobile-apps -->
+    <script src="js/jquery.min.js"></script>
+    <link href="style/style-vehicle.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="style/popup-box.css" rel="stylesheet" type="text/css" media="all" />
+    <style>
+        .popup-with-zoom-anim {
+            display: none;
+        }
+        .table.imagetable {
+            width: 310px;
+            height: 160px;
+        }
+    </style>
+    <script type="application/x-javascript">
+        addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+               function hideURLbar(){ window.scrollTo(0,1); }
+    </script>
+    <script type="text/javascript">
+        function VehicleEdit(e) {
+
+        }
+        function LoadVehicle() {
+            //var _array = new Array();
+            //for (var i = 0; i < 6; i++) {
+            //    _array.push('<div class="w3l_main_grid">');
+            //    _array.push('</div>');
+            //}
+            //$(".w3l_main_grids").html(_array.join(" "));
+        }
+    </script>
+</head>
+<body onload="LoadVehicle()">
+    <div class="main">
+        <!--<h1>Vehicle List</h1>-->
+        <div class="w3l_main_grids">
+            <div class="w3l_main_grid">
+                <div class="w3l_main_grid_top">
+                    <h3><span>Vehicle Info</span></h3>
+                    <div class="container">
+                        <img src="images/VCE.3.jpg" alt=" " />
+                    </div>
+                </div>
+                <div class="w3l_main_grid_middle">
+                    <ul>
+                        <li>Plate Number : A00000</li>
+                        <li>Driver : James</li>
+                        <li>Phone : 123456</li>
+                        <!-- <li>Type : Vehicle</li> -->
+                        <li>Model : EC55B</li>
+                        <li>SN : 56247</li>
+                    </ul>
+                </div>
+                <div class="w3ls_order">
+                    <!--<h3>$143</h3>-->
+                    <a class="popup-with-zoom-anim" href="#small-dialog" style="margin-left:-27px">Edit</a>
+                    <a href="vcemap.html?X=112.457474&Y=28.063&Name=&Scope=60&Routepolicy=distance">Find Dealer Workshop</a>
+                </div>
+            </div>
+            <div class="w3l_main_grid">
+                <div class="w3l_main_grid_top w3l_main_grid_top1">
+                    <h3><span>Vehicle Info</span></h3>
+                    <div class="container">
+                    <img src="images/VCE.1.jpg" alt=" " />
+                </div>
+                </div>
+                <div class="w3l_main_grid_middle w3l_main_grid_middle1">
+                    <ul>
+                        <li>Plate Number : A00001</li>
+                        <li>Driver : James</li>
+                        <li>Phone : 123456</li>
+                        <!-- <li>Type : Forklift</li> -->
+                        <li>Model : EC55B</li>
+                        <li>SN : 56247</li>
+                    </ul>
+                </div>
+                <div class="w3ls_order w3ls_order1">
+                    <!--<h3>$129</h3>-->
+                    <a class="popup-with-zoom-anim" href="#small-dialog" style="margin-left:-27px">Edit</a>
+                    <a href="vcemap.html?X=121.451452&Y=31.094905&Name=&Scope=60&Routepolicy=distance">Find Dealer Workshop</a>
+                </div>
+            </div>
+            <div class="w3l_main_grid">
+                <div class="w3l_main_grid_top w3l_main_grid_top2">
+                    <h3><span>Vehicle Info</span></h3>
+                    <div class="container">
+                    <img src="images/VCE.2.jpg" alt=" " />
+                </div>
+                </div>
+                <div class="w3l_main_grid_middle w3l_main_grid_middle2">
+                    <ul>
+                        <li>Plate Number : A00002</li>
+                        <li>Driver : James</li>
+                        <li>Phone : 123456</li>
+                        <!-- <li>Type : Road Roller</li> -->
+                        <li>Model : EC55B</li>
+                        <li>SN : 56247</li>
+                    </ul>
+                </div>
+                <div class="w3ls_order w3ls_order2">
+                    <!--<h3>$112</h3>-->
+                    <a class="popup-with-zoom-anim" href="#small-dialog" style="margin-left:-27px">Edit</a>
+                    <a href="vcemap.html?X=105.532041&Y=28.968948&Name=&Scope=60&Routepolicy=distance">Find Dealer Workshop</a>
+                </div>
+            </div>
+
+            <div class="clear"> </div>
+        </div>
+        <div class="wthree_pop_up">
+            <div id="small-dialog" class="mfp-hide agile_book_form">
+                <h2>Vehicle Edit</h2>
+                <form action="#" method="post">
+                    <div class="wthree_pop_up_left">
+                        <h4>Plate Number</h4>
+                        <input type="text" name="Name" placeholder="Plate Number" required="" />
+                        <h4>Descript</h4>
+                        <input type="text" name="Email" class="email" placeholder="...." required="" />
+                        <h4>Country</h4>
+                        <select id="country1" onchange="change_country(this.value)" class="frm-field required sect">
+                            <option value="null">China</option>
+                            <option value="null">America</option>
+                            <option value="null">Russia</option>
+                            <option value="null">USA</option>
+                        </select>
+                        <div class="agileits_pop_up_left">
+                            <h4>Vehicle Type</h4>
+                            <div class="colr">
+                                <label class="radio"><input type="radio" name="radio" checked=""><i></i>Vehicle</label>
+                            </div>
+                            <div class="colr">
+                                <label class="radio"><input type="radio" name="radio"><i></i>Forklift</label>
+                            </div>
+                            <div class="colr">
+                                <label class="radio"><input type="radio" name="radio"><i></i>Road Roller</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wthree_pop_up_left">
+                        <div class="clear"> </div>
+                        <div class="w3_delivery_address">
+                            <h4>Driver Email Address</h4>
+                            <input type="email" name="Email" placeholder="Driver Email" required="" />
+                            <h4>Driver Address</h4>
+                            <input type="text" name="Street Line Address" placeholder="Street Line Address" required="" />
+                            <h4>Phone</h4>
+                            <input type="text" name="Pin" placeholder="1234" required="" />
+                            <input type="submit" value="Save">
+                        </div>
+                    </div>
+                    <div class="clear"> </div>
+                </form>
+            </div>
+            <!-- pop-up-box -->
+            <script src="js/jquery.magnific-popup.js" type="text/javascript"></script>
+            <!--//pop-up-box -->
+            <script>
+                $(document).ready(function () {
+                    $('.popup-with-zoom-anim').magnificPopup({
+                        type: 'inline',
+                        fixedContentPos: false,
+                        fixedBgPos: true,
+                        overflowY: 'auto',
+                        closeBtnInside: true,
+                        preloader: false,
+                        midClick: true,
+                        removalDelay: 300,
+                        mainClass: 'my-mfp-zoom-in'
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</body>
+</html>
